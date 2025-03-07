@@ -36,9 +36,8 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.emit("welcome", `welcome to the server mr ${socket.id}`);
-  socket.on("message", (message) => {
-    console.log(message);
-    socket.broadcast.emit("message-received",message)
+  socket.on("message", ({message,roomcode}) => {
+    io.to(roomcode).emit("message-received",message)
   });
 });
 
