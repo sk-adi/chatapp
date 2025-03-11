@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import selfieDoodle from "../assets/images/SelfieDoodle.svg"
 
 function Home() {
   return (
@@ -25,9 +26,9 @@ function Home() {
         {/* Right Section */}
         <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
           <img
-            src="/your-image-path.jpg"
+            src={selfieDoodle}
             alt="Chat Illustration"
-            className="w-64 md:w-80 rounded-lg shadow-lg"
+            className="w-64 md:w-96 h-full md:h-80 rounded-lg"
           />
         </div>
       </div>

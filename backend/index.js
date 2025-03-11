@@ -23,7 +23,7 @@ dotenv.config();
 
 // Middlewares
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true })); // CORS for REST API
+app.use(cors({ origin: "http://localhost:5174", credentials: true })); // CORS for REST API
 app.use(cookieParser());
 
 // API Routes
@@ -35,9 +35,17 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.emit("welcome", `welcome to the server mr ${socket.id}`);
+  console.log(`Request received to connect`)
+  socket.emit("welcome",socket.id);
+  console.log(`Socket connected`)
+
+  socket.on("messageToAll",(msg)=>{
+    console.log(msg)
+    socket.broadcast.emit("others",msg)
+  })
+
   socket.on("message", ({message,roomcode}) => {
-    io.to(roomcode).emit("message-received",message)
+    socket.to(roomcode).emit("message-received",message)
   });
 });
 

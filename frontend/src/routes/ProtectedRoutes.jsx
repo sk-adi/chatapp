@@ -16,6 +16,7 @@ function ProtectedRoutes() {
         const authenticatedUser = await isLoggedIn(token);
         if (!authenticatedUser.success) {
           SetisAuthenticated(false);
+          localStorage.removeItem("token")
           return;
         }
         SetisAuthenticated(true);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { userLogin } from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import messyDoodle from "../assets/images/MessyDoodle.svg"
 
 function Login() {
 
@@ -22,6 +23,7 @@ function Login() {
         return;
       }
       localStorage.setItem("token", isLoginSuccessfull.token)
+      localStorage.setItem("user",JSON.stringify(isLoginSuccessfull.userData))
       Navigate('/user/dashboard')
       Setmessage(isLoginSuccessfull.message)
     } catch (error) {
@@ -37,9 +39,9 @@ function Login() {
         {/* Left Section */}
         <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
           <img
-            src="/your-image-path.jpg"
+            src={messyDoodle}
             alt="Login Illustration"
-            className="w-64 md:w-80 rounded-lg shadow-lg"
+            className="w-64 md:w-80 h-full rounded-lg "
           />
         </div>
 

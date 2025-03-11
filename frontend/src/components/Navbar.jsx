@@ -7,6 +7,7 @@ function Navbar() {
 
   const handleOnLogout = async () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user")
     const Response = await userLogOut();
     Navigate('/login');
   };

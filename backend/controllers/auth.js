@@ -75,9 +75,11 @@ const userLogin = async (req, res) => {
       sameSite: "None",
       secure: false,
     });
+
+    const userData={name:isUserExist.name,email:isUserExist.email,username:isUserExist.username}
     return res
       .status(200)
-      .json({ success: true, message: `Login Successful`, token: token });
+      .json({ success: true, message: `Login Successful`, token: token ,userData:userData });
   } catch (error) {
     return res
       .status(500)

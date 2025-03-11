@@ -51,12 +51,12 @@ const loginTokenCheckSchema=joi.object({
 
 
 
-const loginTokenVerify=(req,res,next)=>{
-    console.log(req.headers.authorization)
-    const {error}=loginTokenCheckSchema.validate(req.headers.authorization)
-    console.log(error)
-    if(error) return res.status(400).json({success:false,message:"Login Expired ! Please Login again"})
-    next()
-}
+// const loginTokenVerify=(req,res,next)=>{
+//     console.log(req.headers.authorization)
+//     const {error}=loginTokenCheckSchema.validate(req.headers.authorization)
+//     console.log(error)
+//     if(error) return res.status(400).json({success:false,message:"Login Expired ! Please Login again"})
+//     next()
+// }
 
-export { loginTokenVerify }
+// export { loginTokenVerify }

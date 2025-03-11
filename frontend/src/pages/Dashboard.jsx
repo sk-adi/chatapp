@@ -1,63 +1,69 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000"); // Move socket outside to prevent duplicate connections
 
 function Dashboard() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const messagesEndRef = useRef(null);
-  const [socketid,setSocketid]=useState("")
-  const [roomcode,setRoomcode]=useState("")
-
-  // Initialize socket connection
-  const socket = useMemo(() => io("http://localhost:3000"), []);
+  const [socketid, setSocketid] = useState("");
+  const [roomcode, setRoomcode] = useState("");
 
   useEffect(() => {
-    console.log("Frontend connected");
-
-    socket.on("welcome", (welcomeMessage) => {
-      console.log(`Welcome ${socket.id} ${welcomeMessage}`);
-      setSocketid(socket.id)
-    });
-
-    socket.on("message-received", (receivedMessage) => {
-      const receivedText = { text: receivedMessage, sender: "other" };
-      setChat((prevChat) => [...prevChat, receivedText]);
+    socket.on("connect", () => {
+      setSocketid(socket.id);
+      console.log(`Connected with ID: ${socket.id}`);
     });
 
 
-    // return () => {
-    //   socket.disconnect(); // Cleanup on unmount
-    // };
-  }, [socket]);
+    const handleOthers=(message)=>{
+      setChat((prevChat)=>[...prevChat,{text:message,sender:"others"}])
+    }
 
-  const handleOnChange = (e) => {
-    setMessage(e.target.value);
-  };
+    const handleMessageReceived=(msg)=>{
+      setChat((prevChat)=>[...prevChat,{text:msg,sender:"others"}])
+
+    }
+    
+    socket.on("others",handleOthers)
+    socket.on("message-received",handleMessageReceived)
+
+    return ()=>{
+      socket.off("others",handleOthers)
+      socket.off("message-received",handleMessageReceived)
+    }
+  }, []);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
 
     const newMessage = { text: message, sender: "you" };
-    socket.emit("message", {message,roomcode});
+
+    if (roomcode === "") {
+      socket.emit("messageToAll", message);
+    } else {
+      socket.emit("message", { message, roomcode });
+    }
+
     setChat((prevChat) => [...prevChat, newMessage]);
-    setMessage("")
+    console.log(chat)
+    setMessage("");
   };
 
   useEffect(() => {
-    // Scroll to the bottom whenever chat updates
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [chat]); // Trigger this effect when chat changes
-
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-6">
         <div className="text-center mb-4">
           <h1 className="text-2xl font-bold text-gray-800">ChatApp</h1>
-          <p>{socketid}</p>
+          <p>{`ID: ${socketid}`}</p>
         </div>
         <div className="h-64 bg-gray-50 border border-gray-300 rounded-lg p-4 overflow-y-auto">
           {chat.length === 0 ? (
@@ -72,7 +78,6 @@ function Dashboard() {
                     : "bg-gray-200 text-black"
                 }`}
               >
-              
                 {msg.text}
               </div>
             ))
@@ -83,18 +88,17 @@ function Dashboard() {
         <div className="mt-4">
           <form onSubmit={handleOnSubmit} className="flex flex-col gap-2">
             <textarea
-              onChange={handleOnChange}
+              onChange={(e) => setMessage(e.target.value)}
               value={message}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Type your message..."
               rows="3"
             ></textarea>
-            
+
             <textarea
-              onChange={(e)=>setRoomcode(e.target.value)}
-              
+              onChange={(e) => setRoomcode(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter room code..."
+              placeholder="Enter room code (optional)..."
               rows="1"
             ></textarea>
 

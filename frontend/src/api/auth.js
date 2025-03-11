@@ -3,7 +3,7 @@ import axios from "axios";
 const userRegister = async (user) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/register",
+      "http://localhost:5000/api/auth/register",
       user
     );
     return response.data;
@@ -22,7 +22,7 @@ export { userRegister };
 const userLogin = async (user) => {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/login",
+      "http://localhost:5000/api/auth/login",
       user
     );
     return response.data;
@@ -38,7 +38,7 @@ export { userLogin };
 
 const userLogOut = async () => {
   try {
-    const response = await axios.post("http://localhost:3000/api/auth/logout");
+    const response = await axios.post("http://localhost:5000/api/auth/logout");
     return response.data;
   } catch (error) {
     console.log(`Error in userLogout`, userLogOut);
@@ -53,7 +53,7 @@ export { userLogOut };
 
 const isLoggedIn=async(token)=>{
   try {
-    const response=await axios.get('http://localhost:3000/api/auth/verify',
+    const response=await axios.get('http://localhost:5000/api/auth/verify',
       {
         headers:{
           Authorization:`Bearer ${token}`

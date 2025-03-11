@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { userRegister } from "../api/auth";
+import iceCreamDoodle from "../assets/images/IceCreamDoodle.svg"
 
 function SignUp() {
 
@@ -93,9 +94,9 @@ function SignUp() {
                 {/* Right Section */}
                 <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
                     <img
-                        src="/your-image-path.jpg"
+                        src={iceCreamDoodle}
                         alt="Sign Up Illustration"
-                        className="w-64 md:w-80 rounded-lg shadow-lg"
+                        className="w-64 md:w-80 rounded-lg"
                     />
                 </div>
             </div>
